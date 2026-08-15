@@ -134,9 +134,9 @@ if uploaded_file is not None:
             # ช่องค้นหา
             search_query = st.text_input("🔍 ค้นหา (ชื่อร้าน / รหัสร้าน / พนักงาน)", "")
             
-            # ตัวกรองระยะทาง
+            # ตัวกรองระยะทาง (ปรับเป็น 200 เมตรตามกำหนด)
             filter_distance = st.checkbox("กรองเฉพาะที่เข้านอกพิกัด (ระยะทางเกินกำหนด)")
-            dist_threshold = st.number_input("ระยะทางที่ถือว่าเกินพิกัด (เมตร)", value=100, step=50) if filter_distance else 0
+            dist_threshold = st.number_input("ระยะทางที่ถือว่าเกินพิกัด (เมตร)", value=200, step=50) if filter_distance else 0
             
             # ตัวกรองสถานะร้านค้า
             status_options = ["ทั้งหมด"] + list(df['สถานะร้านปิด/เลิกกิจการ'].dropna().unique()) if 'สถานะร้านปิด/เลิกกิจการ' in df.columns else ["ทั้งหมด"]
@@ -220,10 +220,10 @@ if uploaded_file is not None:
                 st.caption(f"รหัสร้าน: {shop_code} | พนักงาน: {staff_name}")
                 st.write(f"📅 **วันที่:** {visit_date} | ⏰ **เวลา:** {visit_time}")
                 
-                # แสดงสถานะระยะห่าง GPS
+                # แสดงสถานะระยะห่าง GPS (แจ้งเตือนแดงเมื่อเกิน 200 เมตร)
                 try:
                     dist_val = float(distance)
-                    if dist_val > 100:
+                    if dist_val > 200:
                         st.markdown(f"📍 ระยะห่าง: <span class='distance-alert'>{dist_val:.1f} เมตร (เกินเกณฑ์)</span>", unsafe_allow_html=True)
                         reason = row.get('เหตุผลการเข้านอกพิกัด', '-')
                         if pd.notna(reason) and reason != '-':
