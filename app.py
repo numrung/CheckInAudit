@@ -7,7 +7,7 @@ import io
 # ตั้งค่าหน้าเว็บและสไตล์ (Page Configuration & Styling)
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="ระบบตรวจสอบรูปถ่าย Check-In ร้านค้า",
+    page_title="CheckIn Audit Pro - ระบบตรวจสอบรูปถ่ายร้านค้า",
     page_icon="🔍",
     layout="wide"
 )
@@ -50,7 +50,7 @@ def load_excel_data(uploaded_file):
     # 1. อ่านข้อมูลเพื่อค้นหาแถวที่เป็นหัวข้อตาราง (Header)
     df_raw = pd.read_excel(io.BytesIO(file_bytes), sheet_name=0, header=None)
     
-    header_row_idx = 4  # ค่าน่าเริ่มต้นคือแถวที่ 5 ใน Excel (Index = 4)
+    header_row_idx = 4  # ค่าเริ่มต้นคือแถวที่ 5 ใน Excel (Index = 4)
     for idx, row in df_raw.iterrows():
         row_str_values = [str(val) for val in row.values]
         if 'รูปถ่าย Check-In' in row_str_values or 'ลำดับที่' in row_str_values:
@@ -111,8 +111,8 @@ def load_excel_data(uploaded_file):
 # ---------------------------------------------------------
 # ส่วนแสดงผลหน้าเว็บ (App Interface)
 # ---------------------------------------------------------
-st.title("🔍 ระบบตรวจสอบรูปถ่าย Check-In ร้านค้า")
-st.caption("เครื่องมือสำหรับตรวจเช็กความถูกต้องของรูปถ่ายการเยี่ยมร้านค้า พิกัด GPS และสถานะร้าน")
+st.title("🔍 CheckIn Audit Pro")
+st.caption("ระบบตรวจสอบความถูกต้องของรูปถ่ายการเยี่ยมร้านค้า พิกัด GPS และสถานะร้าน")
 
 # บันทึกผลการตรวจลงใน Session State
 if 'audit_results' not in st.session_state:
@@ -127,6 +127,16 @@ with st.sidebar:
     st.header("🎯 ตัวกรองการตรวจสอบ")
 
 if uploaded_file is not None:
+    # ---------------------------------------------------------
+    # ระบบ เคลียร์แคช & ล้างข้อมูลเก่า อัตโนมัติเมื่อเปลี่ยนไฟล์
+    # ---------------------------------------------------------
+    file_id = uploaded_file.name + str(uploaded_file.size)
+    if st.session_state.get('last_file_id') != file_id:
+        st.cache_data.clear()
+        st.cache_resource.clear()
+        st.session_state['audit_results'] = {}
+        st.session_state['last_file_id'] = file_id
+
     try:
         df = load_excel_data(uploaded_file)
         
@@ -134,7 +144,7 @@ if uploaded_file is not None:
             # ช่องค้นหา
             search_query = st.text_input("🔍 ค้นหา (ชื่อร้าน / รหัสร้าน / พนักงาน)", "")
             
-            # ตัวกรองระยะทาง (ปรับเป็น 200 เมตรตามกำหนด)
+            # ตัวกรองระยะทาง (ตั้งค่าเริ่มต้นเป็น 200 เมตร)
             filter_distance = st.checkbox("กรองเฉพาะที่เข้านอกพิกัด (ระยะทางเกินกำหนด)")
             dist_threshold = st.number_input("ระยะทางที่ถือว่าเกินพิกัด (เมตร)", value=200, step=50) if filter_distance else 0
             
@@ -148,6 +158,15 @@ if uploaded_file is not None:
             # การแบ่งหน้า (Pagination)
             st.markdown("---")
             items_per_page = st.selectbox("แสดงผลกี่รายการต่อหน้า", [12, 24, 48, 96], index=0)
+            
+            # ปุ่มล้างแคชด้วยตัวเองเพิ่มเติม (ถ้าต้องการกดเอง)
+            st.markdown("---")
+            if st.button("🧹 เคลียร์แคชระบบทั้งหมด"):
+                st.cache_data.clear()
+                st.cache_resource.clear()
+                st.session_state.clear()
+                st.success("เคลียร์แคชเรียบร้อยแล้ว!")
+                st.rerun()
 
         # ---------------------------------------------------------
         # ระบบการกรองข้อมูล (Filtering Logic)
@@ -220,7 +239,7 @@ if uploaded_file is not None:
                 st.caption(f"รหัสร้าน: {shop_code} | พนักงาน: {staff_name}")
                 st.write(f"📅 **วันที่:** {visit_date} | ⏰ **เวลา:** {visit_time}")
                 
-                # แสดงสถานะระยะห่าง GPS (แจ้งเตือนแดงเมื่อเกิน 200 เมตร)
+                # แสดงสถานะระยะห่าง GPS (เตือนสีแดงเมื่อเกิน 200 เมตร)
                 try:
                     dist_val = float(distance)
                     if dist_val > 200:
