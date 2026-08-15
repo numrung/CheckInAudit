@@ -33,6 +33,13 @@ st.markdown("""
         color: #16a34a;
         font-weight: bold;
     }
+    /* ปรับขนาดรูปภาพในการ์ดให้อยู่ในสัดส่วนที่พอดี ไม่ล้นและไม่ใหญ่เกินไป */
+    .stImage img {
+        max-height: 250px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin: auto;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -159,7 +166,7 @@ if uploaded_file is not None:
             st.markdown("---")
             items_per_page = st.selectbox("แสดงผลกี่รายการต่อหน้า", [12, 24, 48, 96], index=0)
             
-            # ปุ่มล้างแคชด้วยตัวเองเพิ่มเติม (ถ้าต้องการกดเอง)
+            # ปุ่มล้างแคชด้วยตัวเองเพิ่มเติม
             st.markdown("---")
             if st.button("🧹 เคลียร์แคชระบบทั้งหมด"):
                 st.cache_data.clear()
@@ -252,7 +259,7 @@ if uploaded_file is not None:
                 except Exception:
                     st.write(f"📍 ระยะห่าง: {distance}")
 
-                # แสดงรูปถ่าย Check-In
+                # แสดงรูปถ่าย Check-In (ปรับขนาดให้พอดีการ์ด)
                 checkin_img = row.get('URL_CheckIn_Extracted')
                 closed_img = row.get('URL_Closed_Extracted')
                 
