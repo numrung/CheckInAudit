@@ -55,31 +55,12 @@ st.markdown("""
         border-radius: 8px;
         border: 1px solid #6ee7b7;
     }
-
-    /* Container สื่อโฆษณา/รูปภาพ */
-    .img-preview-box {
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid #e2e8f0;
-        margin-bottom: 8px;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# 2. ฟังก์ชันช่วยแสดงรูปภาพขยายใหญ่ (Modal Lightbox Function)
-# ---------------------------------------------------------
-@st.dialog("🔍 ขยายรูปภาพแบบละเอียด")
-def show_image_modal(image_url, title="รูปถ่ายตรวจสอบ"):
-    """แสดงรูปภาพขนาดใหญ่ใน Dialog/Modal เมื่อผู้ใช้กดคลิกขยาย"""
-    st.markdown(f"### 🖼️ {title}")
-    st.image(image_url, use_container_width=True)
-    st.markdown(f"[🔗 เปิดรูปภาพต้นฉบับในแท็บใหม่]({image_url})")
-
-
-# ---------------------------------------------------------
-# 3. ฟังก์ชันช่วยประมวลผลข้อมูล (Helper Functions)
+# 2. ฟังก์ชันช่วยประมวลผลข้อมูล (Helper Functions)
 # ---------------------------------------------------------
 def load_spirits_data(file):
     filename = file.name.lower()
@@ -156,7 +137,7 @@ def load_checkin_data(file_bytes):
 
 
 # ---------------------------------------------------------
-# 4. เมนูหลัก Navigation (Sidebar)
+# 3. เมนูหลัก Navigation (Sidebar)
 # ---------------------------------------------------------
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/000000/shop.png", width=64)
@@ -173,7 +154,7 @@ with st.sidebar:
 
 
 # =========================================================
-# 5. เมนูที่ 1: Spirits _ สำรวจการติดสื่อในร้านค้า
+# 4. เมนูที่ 1: Spirits _ สำรวจการติดสื่อในร้านค้า
 # =========================================================
 if menu == "🍹 Spirits _ สำรวจการติดสื่อในร้านค้า":
     st.title("🍹 Spirits — สำรวจการติดสื่อในร้านค้า")
@@ -265,13 +246,10 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
                                     clean_url = img_url.strip()
                                     with img_grid[col_idx % 3]:
                                         st.image(clean_url, caption=col_name, use_container_width=True)
-                                        # ปุ่มคลิกขยายรูปใหญ่
-                                        if st.button("🔍 ขยายรูป", key=f"btn_zoom_spirits_{idx}_{col_idx}"):
-                                            show_image_modal(clean_url, title=f"{shop_name_val} - {col_name}")
                                     col_idx += 1
 
                             if not has_image:
-                                st.info("ℹ️ ไม่มีรูปภาพติดสื่อถูกส่งมาในรายการนี้")
+                                st.info("ℹ️️ ไม่มีรูปภาพติดสื่อถูกส่งมาในรายการนี้")
 
                 st.markdown("---")
                 with st.expander("📊 ดูตารางข้อมูลดิบ (Raw Data)"):
@@ -281,7 +259,7 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
 
 
 # =========================================================
-# 6. เมนูที่ 2: CheckIn Audit Pro
+# 5. เมนูที่ 2: CheckIn Audit Pro
 # =========================================================
 elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า":
     st.title("🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า")
@@ -389,23 +367,19 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
 
                         st.markdown("---")
 
-                        # รูปถ่าย Check-in และการขยายรูป
+                        # รูปถ่าย Check-in
                         checkin_img = row.get('URL_CheckIn_Extracted')
                         closed_img = row.get('URL_Closed_Extracted')
                         
                         st.markdown("📷 **รูปถ่าย Check-In**")
                         if pd.notna(checkin_img) and str(checkin_img).startswith("http"):
                             st.image(str(checkin_img), use_container_width=True)
-                            if st.button("🔍 ขยายรูป Check-In", key=f"btn_zoom_ch_{file_identifier}_{orig_idx}"):
-                                show_image_modal(str(checkin_img), title=f"Check-In: {shop_name}")
                         else:
                             st.warning("⚠️ ไม่มี URL รูปถ่าย Check-In")
                         
                         if pd.notna(closed_img) and str(closed_img).startswith("http"):
                             st.markdown("🖼️ **รูปสถานะร้านปิด/เลิกกิจการ**")
                             st.image(str(closed_img), use_container_width=True)
-                            if st.button("🔍 ขยายรูปสถานะร้านปิด", key=f"btn_zoom_cl_{file_identifier}_{orig_idx}"):
-                                show_image_modal(str(closed_img), title=f"ร้านปิด: {shop_name}")
 
                         st.markdown("---")
 
