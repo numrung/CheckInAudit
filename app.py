@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Styling ให้หน้าตาดูโมเดิร์น สบายตา รองรับการใช้งาน
+# Custom CSS เพื่อความสวยงาม เป็นระเบียบ และโมเดิร์น
 st.markdown("""
 <style>
     /* แบ็กกราวด์หลัก */
@@ -22,60 +22,65 @@ st.markdown("""
         font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     
-    /* Header การ์ดเมนู Sidebar */
+    /* Sidebar */
     [data-testid="stSidebar"] {
         background-color: #ffffff;
         border-right: 1px solid #e2e8f0;
     }
     
-    /* กล่องข้อความการ์ด */
+    /* Custom Card */
     .custom-card {
         background-color: #ffffff;
         border-radius: 12px;
         padding: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         border: 1px solid #e2e8f0;
-        margin-bottom: 20px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .custom-card:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        margin-bottom: 16px;
     }
     
-    /* สไตล์ระยะทาง GPS */
+    /* Distance Badges */
     .distance-alert {
-        color: #ef4444;
+        color: #dc2626;
         font-weight: 700;
         background-color: #fef2f2;
-        padding: 2px 8px;
-        border-radius: 6px;
+        padding: 3px 10px;
+        border-radius: 8px;
+        border: 1px solid #fca5a5;
     }
     .distance-ok {
-        color: #10b981;
+        color: #059669;
         font-weight: 700;
         background-color: #ecfdf5;
-        padding: 2px 8px;
-        border-radius: 6px;
+        padding: 3px 10px;
+        border-radius: 8px;
+        border: 1px solid #6ee7b7;
     }
-    
-    /* หัวข้อและ Tag */
-    .badge-tag {
-        background-color: #e0f2fe;
-        color: #0369a1;
-        font-weight: 600;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.85rem;
+
+    /* Container สื่อโฆษณา/รูปภาพ */
+    .img-preview-box {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# 2. ฟังก์ชันช่วยประมวลผลข้อมูล (Helper Functions)
+# 2. ฟังก์ชันช่วยแสดงรูปภาพขยายใหญ่ (Modal Lightbox Function)
 # ---------------------------------------------------------
+@st.dialog("🔍 ขยายรูปภาพแบบละเอียด")
+def show_image_modal(image_url, title="รูปถ่ายตรวจสอบ"):
+    """แสดงรูปภาพขนาดใหญ่ใน Dialog/Modal เมื่อผู้ใช้กดคลิกขยาย"""
+    st.markdown(f"### 🖼️ {title}")
+    st.image(image_url, use_container_width=True)
+    st.markdown(f"[🔗 เปิดรูปภาพต้นฉบับในแท็บใหม่]({image_url})")
 
-# ถอด @st.cache_data ออกเพื่อรองรับ Multi-user ป้องกันข้อมูลค้างข้ามผู้ใช้
+
+# ---------------------------------------------------------
+# 3. ฟังก์ชันช่วยประมวลผลข้อมูล (Helper Functions)
+# ---------------------------------------------------------
 def load_spirits_data(file):
     filename = file.name.lower()
     if filename.endswith('.csv'):
@@ -95,7 +100,6 @@ def load_spirits_data(file):
     return df
 
 
-# ถอด @st.cache_data ออกเพื่อรองรับ Multi-user ป้องกันข้อมูลค้างข้ามผู้ใช้
 def load_checkin_data(file_bytes):
     df_raw = pd.read_excel(io.BytesIO(file_bytes), sheet_name=0, header=None)
     
@@ -152,11 +156,11 @@ def load_checkin_data(file_bytes):
 
 
 # ---------------------------------------------------------
-# 3. เมนูหลัก Navigation (Sidebar)
+# 4. เมนูหลัก Navigation (Sidebar)
 # ---------------------------------------------------------
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/000000/shop.png", width=64)
-    st.title("R4 Management & Analytics")
+    st.title("R4 Analytics Suite")
     st.caption("ระบบช่วยบริหารจัดการตรวจสอบรายงาน สถิติ R4")
     st.markdown("---")
     
@@ -169,7 +173,7 @@ with st.sidebar:
 
 
 # =========================================================
-# 4. เมนูที่ 1: Spirits _ สำรวจการติดสื่อในร้านค้า
+# 5. เมนูที่ 1: Spirits _ สำรวจการติดสื่อในร้านค้า
 # =========================================================
 if menu == "🍹 Spirits _ สำรวจการติดสื่อในร้านค้า":
     st.title("🍹 Spirits — สำรวจการติดสื่อในร้านค้า")
@@ -239,37 +243,45 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
                     staff_val = row.get('พนักงาน', '-')
 
                     with st.expander(f"📍 **{shop_name_val}** (รหัสร้าน: {shop_code_val}) | พนักงาน: {staff_val}"):
-                        st.markdown(f"""
-                        * **Transaction ID:** `{row.get('transactionId', '-')}`
-                        * **วันที่สำรวจ:** {row.get('createdDate', '-')}
-                        * **BU / Channel / Region:** {row.get('BU', '-')} / {row.get('channel', '-')} / {row.get('region', '-')}
-                        * **พิกัด GPS:** Lat {row.get('lat', '-')}, Long {row.get('long', '-')}
-                        """)
+                        col_info, col_pics = st.columns([1, 2])
                         
-                        st.markdown("##### 🖼️ รูปถ่ายสื่อการขายในร้านค้า")
-                        has_image = False
-                        img_grid = st.columns(3)
-                        col_idx = 0
-                        
-                        for col_name in img_cols:
-                            img_url = row[col_name]
-                            if pd.notna(img_url) and isinstance(img_url, str) and img_url.strip().startswith(('http://', 'https://')):
-                                has_image = True
-                                with img_grid[col_idx % 3]:
-                                    st.image(img_url.strip(), caption=col_name, use_container_width=True)
-                                col_idx += 1
+                        with col_info:
+                            st.markdown("##### 📌 ข้อมูลการเข้าสำรวจ")
+                            st.write(f"• **Transaction ID:** `{row.get('transactionId', '-')}`")
+                            st.write(f"• **วันที่สำรวจ:** {row.get('createdDate', '-')}")
+                            st.write(f"• **BU / Channel / Region:** {row.get('BU', '-')} / {row.get('channel', '-')} / {row.get('region', '-')}")
+                            st.write(f"• **พิกัด GPS:** {row.get('lat', '-')}, {row.get('long', '-')}")
 
-                        if not has_image:
-                            st.info("ℹ️ ไม่มีรูปภาพติดสื่อถูกส่งมาในรายการนี้")
+                        with col_pics:
+                            st.markdown("##### 🖼️ รูปถ่ายสื่อการขาย")
+                            has_image = False
+                            img_grid = st.columns(3)
+                            col_idx = 0
+                            
+                            for col_name in img_cols:
+                                img_url = row[col_name]
+                                if pd.notna(img_url) and isinstance(img_url, str) and img_url.strip().startswith(('http://', 'https://')):
+                                    has_image = True
+                                    clean_url = img_url.strip()
+                                    with img_grid[col_idx % 3]:
+                                        st.image(clean_url, caption=col_name, use_container_width=True)
+                                        # ปุ่มคลิกขยายรูปใหญ่
+                                        if st.button("🔍 ขยายรูป", key=f"btn_zoom_spirits_{idx}_{col_idx}"):
+                                            show_image_modal(clean_url, title=f"{shop_name_val} - {col_name}")
+                                    col_idx += 1
 
+                            if not has_image:
+                                st.info("ℹ️ ไม่มีรูปภาพติดสื่อถูกส่งมาในรายการนี้")
+
+                st.markdown("---")
                 with st.expander("📊 ดูตารางข้อมูลดิบ (Raw Data)"):
                     st.dataframe(filtered_df, use_container_width=True)
     else:
-        st.info("👆 กรุณาอัปโหลดไฟล์รายงานการสำรวจสื่อ (.xlsm, .xlsx, .csv) ที่เมนูด้านซ้ายเพื่อเริ่มใช้งาน")
+        st.info("👋 กรุณาอัปโหลดไฟล์รายงานการสำรวจสื่อ (.xlsm, .xlsx, .csv) ที่เมนูด้านซ้ายเพื่อเริ่มต้นใช้งาน")
 
 
 # =========================================================
-# 5. เมนูที่ 2: CheckIn Audit Pro
+# 6. เมนูที่ 2: CheckIn Audit Pro
 # =========================================================
 elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า":
     st.title("🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า")
@@ -278,10 +290,8 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
     uploaded_file = st.sidebar.file_uploader("📂 อัปโหลดไฟล์รายงานการเยี่ยมร้านค้า (.xlsx)", type=["xlsx"], key="checkin_upload")
 
     if uploaded_file is not None:
-        # การป้องกัน Multi-user ปัญหาข้อมูลตีกัน: สร้าง Unique File Identifier
         file_identifier = f"{uploaded_file.name}_{uploaded_file.size}"
         
-        # ถ้าระบบตรวจพบว่าผู้ใช้เปลี่ยนไฟล์ หรือโหลดไฟล์ใหม่ ให้รีเซ็ต Session Audit ผลการตรวจทันที
         if 'current_checkin_file_id' not in st.session_state or st.session_state['current_checkin_file_id'] != file_identifier:
             st.session_state['current_checkin_file_id'] = file_identifier
             st.session_state['audit_results'] = {}
@@ -304,7 +314,7 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
             st.sidebar.markdown("---")
             items_per_page = st.sidebar.selectbox("แสดงรายการต่อหน้า", [12, 24, 48, 96], index=0)
 
-            # Filtering
+            # Filtering Data
             filtered_df = df.copy()
             if search_query:
                 mask = filtered_df.astype(str).apply(lambda row: row.str.contains(search_query, case=False, na=False)).any(axis=1)
@@ -324,7 +334,7 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
                 filtered_df['Current_Audit_Status'] = filtered_df.index.map(get_audit_status)
                 filtered_df = filtered_df[filtered_df['Current_Audit_Status'] == audit_filter]
 
-            # KPI Summary
+            # KPI Summary Cards
             col_m1, col_m2, col_m3, col_m4 = st.columns(4)
             col_m1.metric("จำนวนทั้งหมด", f"{len(df):,} รายการ")
             col_m2.metric("ตรงตามตัวกรอง", f"{len(filtered_df):,} รายการ")
@@ -340,105 +350,112 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
             
             col_p1, col_p2 = st.columns([1, 4])
             with col_p1:
-                current_page = st.number_input(f"หน้า (จากทั้งหมด {total_pages})", min_value=1, max_value=total_pages, value=1)
+                current_page = st.number_input(f"หน้า (ทั้งหมด {total_pages} หน้า)", min_value=1, max_value=total_pages, value=1)
             
             start_idx = (current_page - 1) * items_per_page
             end_idx = start_idx + items_per_page
             page_data = filtered_df.iloc[start_idx:end_idx]
 
-            # Grid Cards Display
+            # Display Cards Grid
             cols_per_row = 3
             grid_cols = st.columns(cols_per_row)
 
             for i, (orig_idx, row) in enumerate(page_data.iterrows()):
                 with grid_cols[i % cols_per_row]:
-                    st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-                    
-                    shop_name = row.get('ชื่อร้านค้า', 'ไม่ระบุชื่อร้าน')
-                    shop_code = row.get('รหัสร้านค้า', '-')
-                    staff_name = row.get('ชื่อพนักงาน', '-')
-                    visit_date = row.get('วันที่เข้าเยี่ยม', '-')
-                    visit_time = row.get('เวลาเข้า', '-')
-                    distance = row.get('ระยะห่างเข้า (เมตร)', 0)
-                    
-                    st.subheader(f"🏪 {shop_name}")
-                    st.caption(f"รหัสร้าน: {shop_code} | พนักงาน: {staff_name}")
-                    st.write(f"📅 **วันที่:** {visit_date} | ⏰ **เวลา:** {visit_time}")
-                    
-                    # GPS Distance Check
-                    try:
-                        dist_val = float(distance)
-                        if dist_val > 100:
-                            st.markdown(f"📍 ระยะห่าง: <span class='distance-alert'>{dist_val:.1f} เมตร (เกินเกณฑ์)</span>", unsafe_allow_html=True)
-                            reason = row.get('เหตุผลการเข้านอกพิกัด', '-')
-                            if pd.notna(reason) and str(reason).strip() != '-':
-                                st.caption(f"เหตุผลเข้านอกพิกัด: {reason}")
+                    with st.container(border=True):
+                        shop_name = row.get('ชื่อร้านค้า', 'ไม่ระบุชื่อร้าน')
+                        shop_code = row.get('รหัสร้านค้า', '-')
+                        staff_name = row.get('ชื่อพนักงาน', '-')
+                        visit_date = row.get('วันที่เข้าเยี่ยม', '-')
+                        visit_time = row.get('เวลาเข้า', '-')
+                        distance = row.get('ระยะห่างเข้า (เมตร)', 0)
+                        
+                        st.markdown(f"#### 🏪 {shop_name}")
+                        st.caption(f"รหัสร้าน: **{shop_code}** | พนักงาน: **{staff_name}**")
+                        st.write(f"📅 **เข้าเยี่ยม:** {visit_date} ⏰ {visit_time}")
+                        
+                        # GPS Distance Status
+                        try:
+                            dist_val = float(distance)
+                            if dist_val > 100:
+                                st.markdown(f"📍 ระยะห่าง: <span class='distance-alert'>{dist_val:.1f} เมตร (เกินเกณฑ์)</span>", unsafe_allow_html=True)
+                                reason = row.get('เหตุผลการเข้านอกพิกัด', '-')
+                                if pd.notna(reason) and str(reason).strip() != '-':
+                                    st.caption(f"⚠️ เหตุผล: {reason}")
+                            else:
+                                st.markdown(f"📍 ระยะห่าง: <span class='distance-ok'>{dist_val:.1f} เมตร</span>", unsafe_allow_html=True)
+                        except Exception:
+                            st.write(f"📍 ระยะห่าง: {distance}")
+
+                        st.markdown("---")
+
+                        # รูปถ่าย Check-in และการขยายรูป
+                        checkin_img = row.get('URL_CheckIn_Extracted')
+                        closed_img = row.get('URL_Closed_Extracted')
+                        
+                        st.markdown("📷 **รูปถ่าย Check-In**")
+                        if pd.notna(checkin_img) and str(checkin_img).startswith("http"):
+                            st.image(str(checkin_img), use_container_width=True)
+                            if st.button("🔍 ขยายรูป Check-In", key=f"btn_zoom_ch_{file_identifier}_{orig_idx}"):
+                                show_image_modal(str(checkin_img), title=f"Check-In: {shop_name}")
                         else:
-                            st.markdown(f"📍 ระยะห่าง: <span class='distance-ok'>{dist_val:.1f} เมตร</span>", unsafe_allow_html=True)
-                    except Exception:
-                        st.write(f"📍 ระยะห่าง: {distance}")
-
-                    # Images
-                    checkin_img = row.get('URL_CheckIn_Extracted')
-                    closed_img = row.get('URL_Closed_Extracted')
-                    
-                    st.markdown("#### 📷 รูปถ่าย Check-In")
-                    if pd.notna(checkin_img) and str(checkin_img).startswith("http"):
-                        st.image(str(checkin_img), use_container_width=True)
-                    else:
-                        st.warning("⚠️ ไม่มี URL รูปถ่าย Check-In")
-                    
-                    if pd.notna(closed_img) and str(closed_img).startswith("http"):
-                        with st.expander("🖼️ ดูรูปสถานะร้านปิด/เลิกกิจการ"):
+                            st.warning("⚠️ ไม่มี URL รูปถ่าย Check-In")
+                        
+                        if pd.notna(closed_img) and str(closed_img).startswith("http"):
+                            st.markdown("🖼️ **รูปสถานะร้านปิด/เลิกกิจการ**")
                             st.image(str(closed_img), use_container_width=True)
+                            if st.button("🔍 ขยายรูปสถานะร้านปิด", key=f"btn_zoom_cl_{file_identifier}_{orig_idx}"):
+                                show_image_modal(str(closed_img), title=f"ร้านปิด: {shop_name}")
 
-                    # Audit Action Form
-                    current_result = st.session_state['audit_results'].get(orig_idx, {'status': 'ยังไม่ได้ตรวจ', 'note': ''})
-                    
-                    options = ["ยังไม่ได้ตรวจ", "ผ่าน", "ไม่ผ่าน", "รอตรวจสอบเพิ่ม"]
-                    default_index = options.index(current_result['status']) if current_result['status'] in options else 0
+                        st.markdown("---")
 
-                    # ผูก key ด้วย file_identifier เพื่อกันความผิดพลาดข้ามการอัปโหลด
-                    status_choice = st.radio(
-                        "ผลการตรวจสอบ:",
-                        options,
-                        index=default_index,
-                        key=f"status_{file_identifier}_{orig_idx}"
-                    )
-                    
-                    audit_note = st.text_input(
-                        "หมายเหตุเพิ่มเติม:",
-                        value=current_result['note'],
-                        key=f"note_{file_identifier}_{orig_idx}",
-                        placeholder="เช่น ถ่ายรูปไม่เห็นหน้าร้าน"
-                    )
-                    
-                    st.session_state['audit_results'][orig_idx] = {
-                        'status': status_choice,
-                        'note': audit_note
-                    }
-                    
-                    st.markdown('</div>', unsafe_allow_html=True)
+                        # Audit Decision Form
+                        current_result = st.session_state['audit_results'].get(orig_idx, {'status': 'ยังไม่ได้ตรวจ', 'note': ''})
+                        options = ["ยังไม่ได้ตรวจ", "ผ่าน", "ไม่ผ่าน", "รอตรวจสอบเพิ่ม"]
+                        default_index = options.index(current_result['status']) if current_result['status'] in options else 0
 
-            # Export Button
+                        status_choice = st.radio(
+                            "ผลการตรวจสอบ:",
+                            options,
+                            index=default_index,
+                            key=f"status_{file_identifier}_{orig_idx}"
+                        )
+                        
+                        audit_note = st.text_input(
+                            "หมายเหตุเพิ่มเติม:",
+                            value=current_result['note'],
+                            key=f"note_{file_identifier}_{orig_idx}",
+                            placeholder="ระบุข้อสังเกต (ถ้ามี)"
+                        )
+                        
+                        # อัปเดตผลใน Session State
+                        st.session_state['audit_results'][orig_idx] = {
+                            'status': status_choice,
+                            'note': audit_note
+                        }
+
+            # Export Button Section
             st.markdown("---")
             st.subheader("📥 ส่งออกผลการตรวจสอบ (Export Results)")
             
-            if st.button("🔄 ประมวลผลและเตรียมไฟล์ดาวน์โหลด"):
-                export_df = df.copy()
-                export_df['ผลการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('status', 'ยังไม่ได้ตรวจ'))
-                export_df['หมายเหตุการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('note', ''))
-                
-                output = io.BytesIO()
-                with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                    export_df.to_excel(writer, index=False, sheet_name='Audit_Results')
-                
-                st.download_button(
-                    label="⬇️ ดาวน์โหลดรายงานผลการตรวจ (.xlsx)",
-                    data=output.getvalue(),
-                    file_name="รายงานการตรวจรูปถ่าย_CheckIn.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
+            col_exp1, col_exp2 = st.columns([1, 2])
+            with col_exp1:
+                if st.button("🔄 ประมวลผลและเตรียมไฟล์ดาวน์โหลด", use_container_width=True):
+                    export_df = df.copy()
+                    export_df['ผลการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('status', 'ยังไม่ได้ตรวจ'))
+                    export_df['หมายเหตุการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('note', ''))
+                    
+                    output = io.BytesIO()
+                    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                        export_df.to_excel(writer, index=False, sheet_name='Audit_Results')
+                    
+                    st.download_button(
+                        label="⬇️ ดาวน์โหลดรายงานผลการตรวจ (.xlsx)",
+                        data=output.getvalue(),
+                        file_name="รายงานการตรวจรูปถ่าย_CheckIn.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        use_container_width=True
+                    )
 
         except Exception as e:
             st.error(f"เกิดข้อผิดพลาดในการอ่านไฟล์: {e}")
