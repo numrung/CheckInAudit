@@ -4,7 +4,7 @@ import openpyxl
 import io
 
 # ---------------------------------------------------------
-# 1. ตั้งค่าหน้าเว็บและสไตล์ CSS (Page Configuration & Custom CSS)
+# 1. Page Config & High-End Custom CSS
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="Retail Audit & Survey Suite",
@@ -13,54 +13,83 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS เพื่อความสวยงาม เป็นระเบียบ และโมเดิร์น
+# Custom Design System (Clean, Minimalist & Modern Enterprise)
 st.markdown("""
 <style>
-    /* แบ็กกราวด์หลัก */
-    .stApp {
-        background-color: #f8fafc;
-        font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Google Fonts Import */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Sarabun', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    
-    /* Sidebar */
+
+    /* แบ็กกราวด์หลักสไตล์ซอฟต์โทน */
+    .stApp {
+        background: #f1f5f9;
+    }
+
+    /* Sidebar Styling */
     [data-testid="stSidebar"] {
         background-color: #ffffff;
         border-right: 1px solid #e2e8f0;
     }
-    
-    /* Custom Card */
-    .custom-card {
+
+    /* App Header Title */
+    .main-title {
+        font-size: 1.85rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.2rem;
+        letter-spacing: -0.02em;
+    }
+    .sub-title {
+        font-size: 0.95rem;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Card Layout ยกระดับด้วย Shadow และ Border บาง */
+    .stContainer[data-testid="stCard"] {
         background-color: #ffffff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
-        margin-bottom: 16px;
+        border-radius: 16px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+        transition: all 0.2s ease-in-out;
     }
-    
-    /* Distance Badges */
-    .distance-alert {
-        color: #dc2626;
-        font-weight: 700;
+
+    /* Status Badges */
+    .badge-alert {
+        color: #ef4444;
         background-color: #fef2f2;
-        padding: 3px 10px;
-        border-radius: 8px;
-        border: 1px solid #fca5a5;
+        border: 1px solid #fecaca;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.825rem;
+        display: inline-block;
     }
-    .distance-ok {
-        color: #059669;
-        font-weight: 700;
+    .badge-ok {
+        color: #10b981;
         background-color: #ecfdf5;
-        padding: 3px 10px;
-        border-radius: 8px;
-        border: 1px solid #6ee7b7;
+        border: 1px solid #a7f3d0;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.825rem;
+        display: inline-block;
+    }
+
+    /* Adjust Metric Cards */
+    [data-testid="stMetricValue"] {
+        font-weight: 700 !important;
+        color: #0f172a !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------
-# 2. ฟังก์ชันช่วยประมวลผลข้อมูล (Helper Functions)
+# 2. Helper Functions
 # ---------------------------------------------------------
 def load_spirits_data(file):
     filename = file.name.lower()
@@ -96,7 +125,6 @@ def load_checkin_data(file_bytes):
     df.columns = [str(h).strip() if pd.notna(h) else f"Col_{i}" for i, h in enumerate(headers[:df.shape[1]])]
     df = df.dropna(how='all').reset_index(drop=True)
     
-    # ดึง Hyperlinks จาก OpenPyXL
     wb = openpyxl.load_workbook(io.BytesIO(file_bytes), data_only=False)
     sheet = wb.active
     
@@ -111,7 +139,6 @@ def load_checkin_data(file_bytes):
     for r_idx in range(len(df)):
         excel_row = data_start_row + r_idx
         
-        # รูปถ่าย Check-In
         ch_url = None
         if checkin_col_idx:
             cell = sheet.cell(row=excel_row, column=checkin_col_idx)
@@ -121,7 +148,6 @@ def load_checkin_data(file_bytes):
                 ch_url = cell.value
         checkin_urls.append(ch_url if ch_url else df.iloc[r_idx].get('รูปถ่าย Check-In', None))
         
-        # รูปสถานะร้านปิด
         cl_url = None
         if closed_col_idx:
             cell = sheet.cell(row=excel_row, column=closed_col_idx)
@@ -137,17 +163,17 @@ def load_checkin_data(file_bytes):
 
 
 # ---------------------------------------------------------
-# 3. เมนูหลัก Navigation (Sidebar)
+# 3. Sidebar Navigation
 # ---------------------------------------------------------
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/000000/shop.png", width=64)
-    st.title("R4 Analytics Suite")
-    st.caption("ระบบช่วยบริหารจัดการตรวจสอบรายงาน สถิติ R4")
+    st.image("https://img.icons8.com/color/96/000000/shop.png", width=56)
+    st.markdown("### **R4 Enterprise**")
+    st.caption("ระบบบริหารจัดการการเข้าเยี่ยมและตรวจสอบสื่อ")
     st.markdown("---")
     
     menu = st.radio(
-        "📌 เลือกเมนูใช้งาน:",
-        ["🍹 Spirits _ สำรวจการติดสื่อในร้านค้า", "🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า"],
+        "📌 **เมนูการทำงาน**",
+        ["🍹 Spirits _ สำรวจสื่อโฆษณา", "🔍 CheckIn Audit Pro"],
         index=0
     )
     st.markdown("---")
@@ -156,9 +182,9 @@ with st.sidebar:
 # =========================================================
 # 4. เมนูที่ 1: Spirits _ สำรวจการติดสื่อในร้านค้า
 # =========================================================
-if menu == "🍹 Spirits _ สำรวจการติดสื่อในร้านค้า":
-    st.title("🍹 Spirits — สำรวจการติดสื่อในร้านค้า")
-    st.caption("ตรวจสอบรูปถ่ายการจัดตั้งสื่อโฆษณาตามแบรนด์สินค้าในแต่ละร้านค้า")
+if menu == "🍹 Spirits _ สำรวจสื่อโฆษณา":
+    st.markdown('<div class="main-title">🍹 Spirits — สำรวจการติดสื่อในร้านค้า</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">ตรวจสอบและอนุมัติรูปถ่ายสื่อโฆษณาตามจุดขาย</div>', unsafe_allow_html=True)
 
     uploaded_file = st.sidebar.file_uploader("📂 อัปโหลดไฟล์สำรวจ (.xlsm, .xlsx, .csv)", type=["csv", "xlsx", "xlsm"], key="spirits_upload")
 
@@ -166,7 +192,6 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
         df = load_spirits_data(uploaded_file)
         
         if df is not None:
-            # จัดการชื่อพนักงาน
             if 'ชื่อ' in df.columns and 'นามสกุล' in df.columns:
                 df['พนักงาน'] = df['ชื่อ'].fillna('').astype(str) + ' ' + df['นามสกุล'].fillna('').astype(str)
                 df['พนักงาน'] = df['พนักงาน'].str.strip().replace('', 'ไม่ระบุ')
@@ -176,22 +201,15 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
                 df['พนักงาน'] = "ไม่ระบุ"
 
             # Sidebar Filters
-            st.sidebar.header("🎯 ตัวกรองข้อมูล")
-            
+            st.sidebar.markdown("#### **🎯 ตัวกรอง**")
             staff_list = ["ทั้งหมด"] + sorted([x for x in df['พนักงาน'].unique() if x != 'ไม่ระบุ'])
             selected_staff = st.sidebar.selectbox("พนักงานผู้สำรวจ:", staff_list)
 
-            if 'shopName' in df.columns:
-                shop_list = ["ทั้งหมด"] + sorted(list(df['shopName'].dropna().astype(str).unique()))
-                selected_shop = st.sidebar.selectbox("เลือกร้านค้า:", shop_list)
-            else:
-                selected_shop = "ทั้งหมด"
+            shop_list = ["ทั้งหมด"] + sorted(list(df['shopName'].dropna().astype(str).unique())) if 'shopName' in df.columns else ["ทั้งหมด"]
+            selected_shop = st.sidebar.selectbox("เลือกร้านค้า:", shop_list)
 
-            if 'region' in df.columns:
-                region_list = ["ทั้งหมด"] + sorted(list(df['region'].dropna().astype(str).unique()))
-                selected_region = st.sidebar.selectbox("Region:", region_list)
-            else:
-                selected_region = "ทั้งหมด"
+            region_list = ["ทั้งหมด"] + sorted(list(df['region'].dropna().astype(str).unique())) if 'region' in df.columns else ["ทั้งหมด"]
+            selected_region = st.sidebar.selectbox("Region:", region_list)
 
             # Filter Logic
             filtered_df = df.copy()
@@ -202,17 +220,14 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
             if selected_region != "ทั้งหมด":
                 filtered_df = filtered_df[filtered_df['region'].astype(str) == selected_region]
 
-            # KPI Dashboard Cards
-            kpi1, kpi2, kpi3 = st.columns(3)
-            kpi1.metric("จำนวนรายการสำรวจ", f"{len(filtered_df):,} รายการ")
-            kpi2.metric("ร้านค้าที่สำรวจ", f"{filtered_df['shopCode'].nunique() if 'shopCode' in filtered_df.columns else 0:,} ร้าน")
-            kpi3.metric("พนักงานผู้สำรวจ", f"{filtered_df['พนักงาน'].nunique():,} คน")
+            # KPI Dashboard
+            k1, k2, k3 = st.columns(3)
+            k1.metric("จำนวนรายการสำรวจ", f"{len(filtered_df):,} รายการ")
+            k2.metric("ร้านค้าที่สำรวจ", f"{filtered_df['shopCode'].nunique() if 'shopCode' in filtered_df.columns else 0:,} ร้าน")
+            k3.metric("พนักงานผู้สำรวจ", f"{filtered_df['พนักงาน'].nunique():,} คน")
 
             st.markdown("---")
 
-            # แสดงผลการ์ดร้านค้าและรูปภาพ
-            st.subheader("📸 รายการสำรวจสื่อโฆษณา")
-            
             if filtered_df.empty:
                 st.warning("⚠️ ไม่พบข้อมูลตามเงื่อนไขที่เลือก")
             else:
@@ -223,18 +238,18 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
                     shop_code_val = row.get('shopCode', '-')
                     staff_val = row.get('พนักงาน', '-')
 
-                    with st.expander(f"📍 **{shop_name_val}** (รหัสร้าน: {shop_code_val}) | พนักงาน: {staff_val}"):
-                        col_info, col_pics = st.columns([1, 2])
+                    with st.expander(f"🏪 **{shop_name_val}** (รหัส: {shop_code_val}) | พนักงาน: {staff_val}"):
+                        c_info, c_pics = st.columns([1, 2])
                         
-                        with col_info:
-                            st.markdown("##### 📌 ข้อมูลการเข้าสำรวจ")
-                            st.write(f"• **Transaction ID:** `{row.get('transactionId', '-')}`")
-                            st.write(f"• **วันที่สำรวจ:** {row.get('createdDate', '-')}")
-                            st.write(f"• **BU / Channel / Region:** {row.get('BU', '-')} / {row.get('channel', '-')} / {row.get('region', '-')}")
-                            st.write(f"• **พิกัด GPS:** {row.get('lat', '-')}, {row.get('long', '-')}")
+                        with c_info:
+                            st.markdown("**📌 ข้อมูลรายการ**")
+                            st.write(f"• **ID:** `{row.get('transactionId', '-')}`")
+                            st.write(f"• **วันที่:** {row.get('createdDate', '-')}")
+                            st.write(f"• **BU/Channel/Region:** {row.get('BU', '-')} / {row.get('channel', '-')} / {row.get('region', '-')}")
+                            st.write(f"• **GPS:** {row.get('lat', '-')}, {row.get('long', '-')}")
 
-                        with col_pics:
-                            st.markdown("##### 🖼️ รูปถ่ายสื่อการขาย")
+                        with c_pics:
+                            st.markdown("**🖼️ รูปถ่ายสื่อการขาย**")
                             has_image = False
                             img_grid = st.columns(3)
                             col_idx = 0
@@ -243,29 +258,28 @@ if menu == "🍹 Spirits _ สำรวจการติดสื่อใน�
                                 img_url = row[col_name]
                                 if pd.notna(img_url) and isinstance(img_url, str) and img_url.strip().startswith(('http://', 'https://')):
                                     has_image = True
-                                    clean_url = img_url.strip()
                                     with img_grid[col_idx % 3]:
-                                        st.image(clean_url, caption=col_name, use_container_width=True)
+                                        st.image(img_url.strip(), caption=col_name, use_container_width=True)
                                     col_idx += 1
 
                             if not has_image:
-                                st.info("ℹ️️ ไม่มีรูปภาพติดสื่อถูกส่งมาในรายการนี้")
+                                st.info("ℹ️ ไม่มีรูปภาพแนบในรายการนี้")
 
                 st.markdown("---")
-                with st.expander("📊 ดูตารางข้อมูลดิบ (Raw Data)"):
+                with st.expander("📊 ตารางข้อมูลดิบ (Raw Data)"):
                     st.dataframe(filtered_df, use_container_width=True)
     else:
-        st.info("👋 กรุณาอัปโหลดไฟล์รายงานการสำรวจสื่อ (.xlsm, .xlsx, .csv) ที่เมนูด้านซ้ายเพื่อเริ่มต้นใช้งาน")
+        st.info("👋 กรุณาอัปโหลดไฟล์ข้อมูลที่ Sidebar เพื่อเริ่มการทำงาน")
 
 
 # =========================================================
 # 5. เมนูที่ 2: CheckIn Audit Pro
 # =========================================================
-elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า":
-    st.title("🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า")
-    st.caption("ระบบตรวจสอบรูปถ่าย Check-In ระยะห่างพิกัด GPS และสถานะร้านค้า")
+elif menu == "🔍 CheckIn Audit Pro":
+    st.markdown('<div class="main-title">🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">ระบบตรวจสอบพิกัด GPS, ระยะห่างการเข้าเยี่ยม และรูปถ่ายสถานะร้านค้า</div>', unsafe_allow_html=True)
 
-    uploaded_file = st.sidebar.file_uploader("📂 อัปโหลดไฟล์รายงานการเยี่ยมร้านค้า (.xlsx)", type=["xlsx"], key="checkin_upload")
+    uploaded_file = st.sidebar.file_uploader("📂 อัปโหลดไฟล์รายงาน (.xlsx)", type=["xlsx"], key="checkin_upload")
 
     if uploaded_file is not None:
         file_identifier = f"{uploaded_file.name}_{uploaded_file.size}"
@@ -278,15 +292,14 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
             file_bytes = uploaded_file.read()
             df = load_checkin_data(file_bytes)
 
-            st.sidebar.header("🎯 ตัวกรองการตรวจสอบ")
-            search_query = st.sidebar.text_input("🔍 ค้นหา (ชื่อร้าน / รหัสร้าน / พนักงาน)", "")
+            st.sidebar.markdown("#### **🎯 ตัวกรองการตรวจ**")
+            search_query = st.sidebar.text_input("🔍 ค้นหา (ชื่อร้าน/รหัส/พนักงาน)", "")
             
             filter_distance = st.sidebar.checkbox("กรองเฉพาะที่เข้านอกพิกัด")
             dist_threshold = st.sidebar.number_input("ระยะทางเกินกำหนด (เมตร)", value=100, step=50) if filter_distance else 0
             
             status_options = ["ทั้งหมด"] + list(df['สถานะร้านปิด/เลิกกิจการ'].dropna().unique()) if 'สถานะร้านปิด/เลิกกิจการ' in df.columns else ["ทั้งหมด"]
             selected_status = st.sidebar.selectbox("สถานะร้านค้า", status_options)
-            
             audit_filter = st.sidebar.selectbox("สถานะการตรวจ", ["ทั้งหมด", "ยังไม่ได้ตรวจ", "ผ่าน", "ไม่ผ่าน", "รอตรวจสอบเพิ่ม"])
             
             st.sidebar.markdown("---")
@@ -312,35 +325,36 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
                 filtered_df['Current_Audit_Status'] = filtered_df.index.map(get_audit_status)
                 filtered_df = filtered_df[filtered_df['Current_Audit_Status'] == audit_filter]
 
-            # KPI Summary Cards
-            col_m1, col_m2, col_m3, col_m4 = st.columns(4)
-            col_m1.metric("จำนวนทั้งหมด", f"{len(df):,} รายการ")
-            col_m2.metric("ตรงตามตัวกรอง", f"{len(filtered_df):,} รายการ")
+            # Summary Metrics
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("รายการทั้งหมด", f"{len(df):,} รายการ")
+            c2.metric("ตรงตามตัวกรอง", f"{len(filtered_df):,} รายการ")
             audited_count = len([v for v in st.session_state['audit_results'].values() if v.get('status') != 'ยังไม่ได้ตรวจ'])
-            col_m3.metric("ตรวจแล้ว", f"{audited_count:,} รายการ")
-            col_m4.metric("คงเหลือ", f"{max(0, len(df) - audited_count):,} รายการ")
+            c3.metric("ตรวจแล้ว", f"{audited_count:,} รายการ")
+            c4.metric("คงเหลือ", f"{max(0, len(df) - audited_count):,} รายการ")
 
             st.markdown("---")
 
-            # Pagination
+            # Pagination Controls
             total_items = len(filtered_df)
             total_pages = max(1, (total_items + items_per_page - 1) // items_per_page)
             
-            col_p1, col_p2 = st.columns([1, 4])
+            col_p1, _ = st.columns([2, 3])
             with col_p1:
-                current_page = st.number_input(f"หน้า (ทั้งหมด {total_pages} หน้า)", min_value=1, max_value=total_pages, value=1)
+                current_page = st.number_input(f"เลือกหน้า (จากทั้งหมด {total_pages} หน้า)", min_value=1, max_value=total_pages, value=1)
             
             start_idx = (current_page - 1) * items_per_page
             end_idx = start_idx + items_per_page
             page_data = filtered_df.iloc[start_idx:end_idx]
 
-            # Display Cards Grid
+            # Grid Display
             cols_per_row = 3
             grid_cols = st.columns(cols_per_row)
 
             for i, (orig_idx, row) in enumerate(page_data.iterrows()):
                 with grid_cols[i % cols_per_row]:
-                    with st.container(border=True):
+                    # ใช้ st.container เพื่อสร้างการ์ดที่ขอบมน สะอาด
+                    with st.container():
                         shop_name = row.get('ชื่อร้านค้า', 'ไม่ระบุชื่อร้าน')
                         shop_code = row.get('รหัสร้านค้า', '-')
                         staff_name = row.get('ชื่อพนักงาน', '-')
@@ -348,90 +362,86 @@ elif menu == "🔍 CheckIn Audit Pro รายงานเยี่ยมร้�
                         visit_time = row.get('เวลาเข้า', '-')
                         distance = row.get('ระยะห่างเข้า (เมตร)', 0)
                         
-                        st.markdown(f"#### 🏪 {shop_name}")
-                        st.caption(f"รหัสร้าน: **{shop_code}** | พนักงาน: **{staff_name}**")
-                        st.write(f"📅 **เข้าเยี่ยม:** {visit_date} ⏰ {visit_time}")
+                        st.markdown(f"##### 🏪 **{shop_name}**")
+                        st.caption(f"รหัส: **{shop_code}** | พนักงาน: **{staff_name}**")
+                        st.write(f"📅 {visit_date}  ⏰ {visit_time}")
                         
-                        # GPS Distance Status
+                        # Distance Alert Badge
                         try:
                             dist_val = float(distance)
                             if dist_val > 100:
-                                st.markdown(f"📍 ระยะห่าง: <span class='distance-alert'>{dist_val:.1f} เมตร (เกินเกณฑ์)</span>", unsafe_allow_html=True)
+                                st.markdown(f"<div class='badge-alert'>📍 ระยะห่าง {dist_val:.1f} ม. (นอกพิกัด)</div>", unsafe_allow_html=True)
                                 reason = row.get('เหตุผลการเข้านอกพิกัด', '-')
                                 if pd.notna(reason) and str(reason).strip() != '-':
                                     st.caption(f"⚠️ เหตุผล: {reason}")
                             else:
-                                st.markdown(f"📍 ระยะห่าง: <span class='distance-ok'>{dist_val:.1f} เมตร</span>", unsafe_allow_html=True)
+                                st.markdown(f"<div class='badge-ok'>📍 ระยะห่าง {dist_val:.1f} ม.</div>", unsafe_allow_html=True)
                         except Exception:
                             st.write(f"📍 ระยะห่าง: {distance}")
 
                         st.markdown("---")
 
-                        # รูปถ่าย Check-in
+                        # Images Display
                         checkin_img = row.get('URL_CheckIn_Extracted')
                         closed_img = row.get('URL_Closed_Extracted')
                         
-                        st.markdown("📷 **รูปถ่าย Check-In**")
+                        st.markdown("**📷 รูป Check-In**")
                         if pd.notna(checkin_img) and str(checkin_img).startswith("http"):
                             st.image(str(checkin_img), use_container_width=True)
                         else:
-                            st.warning("⚠️ ไม่มี URL รูปถ่าย Check-In")
+                            st.warning("⚠️ ไม่มี URL รูป Check-In")
                         
                         if pd.notna(closed_img) and str(closed_img).startswith("http"):
-                            st.markdown("🖼️ **รูปสถานะร้านปิด/เลิกกิจการ**")
+                            st.markdown("**🖼️ รูปสถานะร้านปิด/เลิกกิจการ**")
                             st.image(str(closed_img), use_container_width=True)
 
                         st.markdown("---")
 
-                        # Audit Decision Form
+                        # Audit Form Controls
                         current_result = st.session_state['audit_results'].get(orig_idx, {'status': 'ยังไม่ได้ตรวจ', 'note': ''})
                         options = ["ยังไม่ได้ตรวจ", "ผ่าน", "ไม่ผ่าน", "รอตรวจสอบเพิ่ม"]
                         default_index = options.index(current_result['status']) if current_result['status'] in options else 0
 
                         status_choice = st.radio(
-                            "ผลการตรวจสอบ:",
+                            "ผลการตรวจ:",
                             options,
                             index=default_index,
                             key=f"status_{file_identifier}_{orig_idx}"
                         )
                         
                         audit_note = st.text_input(
-                            "หมายเหตุเพิ่มเติม:",
+                            "หมายเหตุ:",
                             value=current_result['note'],
                             key=f"note_{file_identifier}_{orig_idx}",
-                            placeholder="ระบุข้อสังเกต (ถ้ามี)"
+                            placeholder="ระบุข้อสังเกต..."
                         )
                         
-                        # อัปเดตผลใน Session State
                         st.session_state['audit_results'][orig_idx] = {
                             'status': status_choice,
                             'note': audit_note
                         }
 
-            # Export Button Section
+            # Export Section
             st.markdown("---")
-            st.subheader("📥 ส่งออกผลการตรวจสอบ (Export Results)")
+            st.subheader("📥 ส่งออกผลการตรวจสอบ")
             
-            col_exp1, col_exp2 = st.columns([1, 2])
-            with col_exp1:
-                if st.button("🔄 ประมวลผลและเตรียมไฟล์ดาวน์โหลด", use_container_width=True):
-                    export_df = df.copy()
-                    export_df['ผลการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('status', 'ยังไม่ได้ตรวจ'))
-                    export_df['หมายเหตุการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('note', ''))
-                    
-                    output = io.BytesIO()
-                    with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                        export_df.to_excel(writer, index=False, sheet_name='Audit_Results')
-                    
-                    st.download_button(
-                        label="⬇️ ดาวน์โหลดรายงานผลการตรวจ (.xlsx)",
-                        data=output.getvalue(),
-                        file_name="รายงานการตรวจรูปถ่าย_CheckIn.xlsx",
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        use_container_width=True
-                    )
+            if st.button("🔄 ประมวลผลไฟล์สำหรับดาวน์โหลด"):
+                export_df = df.copy()
+                export_df['ผลการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('status', 'ยังไม่ได้ตรวจ'))
+                export_df['หมายเหตุการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('note', ''))
+                
+                output = io.BytesIO()
+                with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                    export_df.to_excel(writer, index=False, sheet_name='Audit_Results')
+                
+                st.download_button(
+                    label="⬇️ ดาวน์โหลดรายงาน (.xlsx)",
+                    data=output.getvalue(),
+                    file_name="รายงานการตรวจรูปถ่าย_CheckIn.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
 
         except Exception as e:
             st.error(f"เกิดข้อผิดพลาดในการอ่านไฟล์: {e}")
     else:
-        st.info("👋 กรุณาอัปโหลดไฟล์ Excel รายงานการเยี่ยมร้านค้าที่แถบด้านซ้ายเพื่อเริ่มต้นใช้งาน")
+        st.info("👋 กรุณาอัปโหลดไฟล์รายงานการเยี่ยมร้านค้าที่แถบด้านซ้ายเพื่อเริ่มต้นใช้งาน")
