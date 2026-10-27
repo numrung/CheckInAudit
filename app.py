@@ -4,85 +4,150 @@ import openpyxl
 import io
 
 # ---------------------------------------------------------
-# 1. Page Config & High-End Custom CSS
+# 1. Page Config & Futuristic Cyber/Enterprise Custom CSS
 # ---------------------------------------------------------
 st.set_page_config(
     page_title="Retail Audit & Survey Suite",
-    page_icon="🏬",
+    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom Design System (Clean, Minimalist & Modern Enterprise)
+# Futuristic & Sleek Modern Design System
 st.markdown("""
 <style>
     /* Google Fonts Import */
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap');
 
     html, body, [class*="css"] {
-        font-family: 'Sarabun', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Plus Jakarta Sans', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* แบ็กกราวด์หลักสไตล์ซอฟต์โทน */
+    /* Soft Premium Gradient Background */
     .stApp {
-        background: #f1f5f9;
-    }
-
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] {
-        background-color: #ffffff;
-        border-right: 1px solid #e2e8f0;
-    }
-
-    /* App Header Title */
-    .main-title {
-        font-size: 1.85rem;
-        font-weight: 700;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         color: #0f172a;
-        margin-bottom: 0.2rem;
-        letter-spacing: -0.02em;
     }
+
+    /* Modern Glassmorphic Sidebar */
+    [data-testid="stSidebar"] {
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border-right: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    /* App Header Title & Banner */
+    .header-banner {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 50%, #06b6d4 100%);
+        padding: 24px 32px;
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.25);
+        margin-bottom: 2rem;
+    }
+
+    .main-title {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
     .sub-title {
         font-size: 0.95rem;
-        color: #64748b;
-        margin-bottom: 1.5rem;
+        opacity: 0.9;
+        font-weight: 400;
+        margin-top: 6px;
     }
 
-    /* Card Layout ยกระดับด้วย Shadow และ Border บาง */
-    .stContainer[data-testid="stCard"] {
-        background-color: #ffffff;
-        border-radius: 16px !important;
-        border: 1px solid #e2e8f0 !important;
-        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
-        transition: all 0.2s ease-in-out;
+    /* Futuristic Card Styling */
+    div[data-testid="stVerticalBlock"] > div[style*="background-color"] {
+        border-radius: 20px !important;
     }
 
-    /* Status Badges */
+    .stCard {
+        background: #ffffff;
+        border-radius: 20px !important;
+        border: 1px solid rgba(226, 232, 240, 0.8) !important;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 20px;
+    }
+
+    .stCard:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.08) !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    /* Modern Status Badges */
     .badge-alert {
-        color: #ef4444;
-        background-color: #fef2f2;
-        border: 1px solid #fecaca;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        font-weight: 600;
-        font-size: 0.825rem;
-        display: inline-block;
-    }
-    .badge-ok {
-        color: #10b981;
-        background-color: #ecfdf5;
-        border: 1px solid #a7f3d0;
-        padding: 4px 12px;
-        border-radius: 9999px;
-        font-weight: 600;
-        font-size: 0.825rem;
-        display: inline-block;
+        color: #dc2626;
+        background: rgba(254, 226, 226, 0.7);
+        border: 1px solid #fca5a5;
+        padding: 6px 14px;
+        border-radius: 99px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        backdrop-filter: blur(4px);
     }
 
-    /* Adjust Metric Cards */
+    .badge-ok {
+        color: #059669;
+        background: rgba(209, 250, 229, 0.7);
+        border: 1px solid #6ee7b7;
+        padding: 6px 14px;
+        border-radius: 99px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        backdrop-filter: blur(4px);
+    }
+
+    /* Metric Cards Styling */
+    [data-testid="stMetric"] {
+        background: #ffffff;
+        padding: 18px 22px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
     [data-testid="stMetricValue"] {
-        font-weight: 700 !important;
-        color: #0f172a !important;
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Sleek Radio Buttons & Inputs */
+    .stRadio > label {
+        font-weight: 600 !important;
+        color: #334155;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -163,17 +228,26 @@ def load_checkin_data(file_bytes):
 
 
 # ---------------------------------------------------------
-# 3. Sidebar Navigation
+# 3. Sidebar Navigation (Sleek Modern Style)
 # ---------------------------------------------------------
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/000000/shop.png", width=56)
-    st.markdown("### **R4 Enterprise**")
-    st.caption("ระบบบริหารจัดการการเข้าเยี่ยมและตรวจสอบสื่อ")
+    st.markdown("""
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+            <div style="background: linear-gradient(135deg, #4f46e5, #06b6d4); padding: 10px; border-radius: 14px; color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                <span style="font-size: 24px;">⚡</span>
+            </div>
+            <div>
+                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #0f172a;">R4 Enterprise</h3>
+                <p style="margin: 0; font-size: 0.75rem; color: #64748b;">Audit & Field Intelligence</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("---")
     
     menu = st.radio(
-        "📌 **เมนูการทำงาน**",
-        ["🍹 Spirits _ สำรวจสื่อโฆษณา", "🔍 CheckIn Audit Pro"],
+        "📌 **เมนูหลัก (Navigation)**",
+        ["🍸 Spirits Intelligence", "🎯 CheckIn Audit Pro"],
         index=0
     )
     st.markdown("---")
@@ -182,9 +256,13 @@ with st.sidebar:
 # =========================================================
 # 4. เมนูที่ 1: Spirits _ สำรวจการติดสื่อในร้านค้า
 # =========================================================
-if menu == "🍹 Spirits _ สำรวจสื่อโฆษณา":
-    st.markdown('<div class="main-title">🍹 Spirits — สำรวจการติดสื่อในร้านค้า</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-title">ตรวจสอบและอนุมัติรูปถ่ายสื่อโฆษณาตามจุดขาย</div>', unsafe_allow_html=True)
+if menu == "🍸 Spirits Intelligence":
+    st.markdown("""
+        <div class="header-banner">
+            <div class="main-title">🍸 Spirits — Field Media Audit</div>
+            <div class="sub-title">ระบบบริหารจัดการ ตรวจสอบ และอนุมัติรูปถ่ายสื่อโฆษณา ณ จุดขาย</div>
+        </div>
+    """, unsafe_allow_html=True)
 
     uploaded_file = st.sidebar.file_uploader("📂 อัปโหลดไฟล์สำรวจ (.xlsm, .xlsx, .csv)", type=["csv", "xlsx", "xlsm"], key="spirits_upload")
 
@@ -201,15 +279,294 @@ if menu == "🍹 Spirits _ สำรวจสื่อโฆษณา":
                 df['พนักงาน'] = "ไม่ระบุ"
 
             # Sidebar Filters
-            st.sidebar.markdown("#### **🎯 ตัวกรอง**")
+            st.sidebar.markdown("#### ⚙️ **ตัวกรองค้นหา**")
             staff_list = ["ทั้งหมด"] + sorted([x for x in df['พนักงาน'].unique() if x != 'ไม่ระบุ'])
-            selected_staff = st.sidebar.selectbox("พนักงานผู้สำรวจ:", staff_list)
+            selected_staff = st.sidebar.selectbox("👤 พนักงานผู้สำรวจ:", staff_list)
+
+            shop_list = ["ทั้งหมด"] + sorted(list(df['shopName'].dropna().astype(str).unique())) if 'shopName' in df.columns else ["นี่คือโค้ดเต็มสมบูรณ์ที่ได้รับการปรับโฉม **UI/UX ให้ดูทันสมัย ล้ำยุค และเป็นระบบ Enterprise Dashboard ระดับพรีเมียม** พร้อมคงฟังก์ชัน Logic การทำงานเดิมของคุณไว้อย่างครบถ้วน 100% ครับ
+
+---
+
+### 🎨 สิ่งที่ได้รับการอัปเกรด & ปรับแต่ง:
+1. **Glassmorphism & Soft Gradient Design**:
+   - ตกแต่งส่วน Header ด้วย Linear Gradient (Indigo/Blue/Cyan) และการเข้ามุมโค้งเนียนตา
+   - Sidebar ปรับสไตล์กระจกฝ้า (Translucent Glass Effect) อ่านง่าย เรียบหรู
+2. **Interactive Cards & Micro-interactions**:
+   - เพิ่ม Hover Effects สำหรับการ์ดร้านค้า เมื่อนำเมาส์ไปวาง การ์ดจะยกตัวขึ้นเล็กน้อยพร้อม Soft Shadow
+   - Badge แสดงสถานะและระยะห่าง GPS (📍) ถูกปรับให้เป็น Pill Badge สไตล์ Modern App
+3. **Icons & Typography Refinement**:
+   - ปรับใช้ Google Font `'Plus Jakarta Sans'` ร่วมกับ `'Sarabun'` ให้ความรู้สึกเป็น Enterprise Application
+   - ใช้สัญลักษณ์ Icon ที่ดูสะอาดตา คมชัด เหมาะกับงาน Business Audit
+
+---
+
+```python
+import streamlit as st
+import pandas as pd
+import openpyxl
+import io
+
+# ---------------------------------------------------------
+# 1. Page Config & High-End Custom CSS (Futuristic & Sleek)
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title="Retail Audit & Survey Suite",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Custom Design System (Modern Glassmorphic Enterprise UI)
+st.markdown("""
+<style>
+    /* Google Fonts Import */
+    @import url('[https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap)');
+
+    html, body, [class*="css"] {
+        font-family: 'Plus Jakarta Sans', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Soft Enterprise Gradient Background */
+    .stApp {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        color: #0f172a;
+    }
+
+    /* Modern Translucent Sidebar */
+    [data-testid="stSidebar"] {
+        background: rgba(255, 255, 255, 0.88) !important;
+        backdrop-filter: blur(14px);
+        border-right: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    /* Hero Header Banner */
+    .header-banner {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 50%, #06b6d4 100%);
+        padding: 24px 32px;
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.25);
+        margin-bottom: 1.8rem;
+    }
+
+    .main-title {
+        font-size: 1.9rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin: 0;
+        color: #ffffff;
+    }
+
+    .sub-title {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        font-weight: 400;
+        margin-top: 6px;
+    }
+
+    /* Status Badges */
+    .badge-alert {
+        color: #dc2626;
+        background: rgba(254, 226, 226, 0.85);
+        border: 1px solid #fca5a5;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .badge-ok {
+        color: #059669;
+        background: rgba(209, 250, 229, 0.85);
+        border: 1px solid #6ee7b7;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Metric Cards Custom Styling */
+    [data-testid="stMetric"] {
+        background: #ffffff;
+        padding: 18px 22px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    [data-testid="stMetricValue"] {
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Custom Radio Buttons & Inputs */
+    .stRadio > label {
+        font-weight: 600 !important;
+        color: #334155;
+    }
+
+    /* Scrollbar Design */
+    ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+# ---------------------------------------------------------
+# 2. Helper Functions
+# ---------------------------------------------------------
+def load_spirits_data(file):
+    filename = file.name.lower()
+    if filename.endswith('.csv'):
+        try:
+            df = pd.read_csv(file, header=1)
+        except Exception:
+            file.seek(0)
+            df = pd.read_csv(file, encoding='tis-620', header=1)
+    elif filename.endswith(('.xlsx', '.xlsm')):
+        df = pd.read_excel(file, engine='openpyxl', header=1)
+    else:
+        return None
+        
+    df.columns = df.columns.astype(str).str.strip()
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+    df = df.dropna(how='all')
+    return df
+
+
+def load_checkin_data(file_bytes):
+    df_raw = pd.read_excel(io.BytesIO(file_bytes), sheet_name=0, header=None)
+    
+    header_row_idx = 4
+    for idx, row in df_raw.iterrows():
+        row_str_values = [str(val) for val in row.values]
+        if 'รูปถ่าย Check-In' in row_str_values or 'ลำดับที่' in row_str_values:
+            header_row_idx = idx
+            break
+            
+    headers = df_raw.iloc[header_row_idx].values
+    df = pd.read_excel(io.BytesIO(file_bytes), sheet_name=0, skiprows=header_row_idx + 1, header=None)
+    df.columns = [str(h).strip() if pd.notna(h) else f"Col_{i}" for i, h in enumerate(headers[:df.shape[1]])]
+    df = df.dropna(how='all').reset_index(drop=True)
+    
+    wb = openpyxl.load_workbook(io.BytesIO(file_bytes), data_only=False)
+    sheet = wb.active
+    
+    col_map = {name: idx + 1 for idx, name in enumerate(df.columns)}
+    checkin_col_idx = col_map.get('รูปถ่าย Check-In')
+    closed_col_idx = col_map.get('รูปสถานะร้านปิด/เลิกกิจการ')
+    
+    checkin_urls = []
+    closed_urls = []
+    data_start_row = header_row_idx + 2
+    
+    for r_idx in range(len(df)):
+        excel_row = data_start_row + r_idx
+        
+        ch_url = None
+        if checkin_col_idx:
+            cell = sheet.cell(row=excel_row, column=checkin_col_idx)
+            if cell.hyperlink and cell.hyperlink.target:
+                ch_url = cell.hyperlink.target
+            elif isinstance(cell.value, str) and cell.value.startswith(('http://', 'https://')):
+                ch_url = cell.value
+        checkin_urls.append(ch_url if ch_url else df.iloc[r_idx].get('รูปถ่าย Check-In', None))
+        
+        cl_url = None
+        if closed_col_idx:
+            cell = sheet.cell(row=excel_row, column=closed_col_idx)
+            if cell.hyperlink and cell.hyperlink.target:
+                cl_url = cell.hyperlink.target
+            elif isinstance(cell.value, str) and cell.value.startswith(('http://', 'https://')):
+                cl_url = cell.value
+        closed_urls.append(cl_url if cl_url else df.iloc[r_idx].get('รูปสถานะร้านปิด/เลิกกิจการ', None))
+        
+    df['URL_CheckIn_Extracted'] = checkin_urls
+    df['URL_Closed_Extracted'] = closed_urls
+    return df
+
+
+# ---------------------------------------------------------
+# 3. Sidebar Navigation (Modern Brand Identity)
+# ---------------------------------------------------------
+with st.sidebar:
+    st.markdown("""
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+            <div style="background: linear-gradient(135deg, #4f46e5, #06b6d4); padding: 12px; border-radius: 16px; color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);">
+                <span style="font-size: 24px;">⚡</span>
+            </div>
+            <div>
+                <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">R4 Enterprise</h3>
+                <p style="margin: 0; font-size: 0.78rem; color: #64748b; font-weight: 500;">Audit & Intelligence Suite</p>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    menu = st.radio(
+        "📌 **เมนูการทำงาน**",
+        ["🍹 Spirits _ สำรวจสื่อโฆษณา", "🔍 CheckIn Audit Pro"],
+        index=0
+    )
+    st.markdown("---")
+
+
+# =========================================================
+# 4. เมนูที่ 1: Spirits _ สำรวจการติดสื่อในร้านค้า
+# =========================================================
+if menu == "🍹 Spirits _ สำรวจสื่อโฆษณา":
+    st.markdown("""
+        <div class="header-banner">
+            <div class="main-title">🍹 Spirits — สำรวจการติดสื่อในร้านค้า</div>
+            <div class="sub-title">ระบบตรวจสอบและอนุมัติรูปถ่ายสื่อโฆษณาตามจุดขายแบบเรียลไทม์</div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    uploaded_file = st.sidebar.file_uploader("📂 อัปโหลดไฟล์สำรวจ (.xlsm, .xlsx, .csv)", type=["csv", "xlsx", "xlsm"], key="spirits_upload")
+
+    if uploaded_file is not None:
+        df = load_spirits_data(uploaded_file)
+        
+        if df is not None:
+            if 'ชื่อ' in df.columns and 'นามสกุล' in df.columns:
+                df['พนักงาน'] = df['ชื่อ'].fillna('').astype(str) + ' ' + df['นามสกุล'].fillna('').astype(str)
+                df['พนักงาน'] = df['พนักงาน'].str.strip().replace('', 'ไม่ระบุ')
+            elif 'createdBy' in df.columns:
+                df['พนักงาน'] = df['createdBy'].fillna('ไม่ระบุ')
+            else:
+                df['พนักงาน'] = "ไม่ระบุ"
+
+            # Sidebar Filters
+            st.sidebar.markdown("#### **🎯 ตัวกรองค้นหา**")
+            staff_list = ["ทั้งหมด"] + sorted([x for x in df['พนักงาน'].unique() if x != 'ไม่ระบุ'])
+            selected_staff = st.sidebar.selectbox("👤 พนักงานผู้สำรวจ:", staff_list)
 
             shop_list = ["ทั้งหมด"] + sorted(list(df['shopName'].dropna().astype(str).unique())) if 'shopName' in df.columns else ["ทั้งหมด"]
-            selected_shop = st.sidebar.selectbox("เลือกร้านค้า:", shop_list)
+            selected_shop = st.sidebar.selectbox("🏪 เลือกร้านค้า:", shop_list)
 
             region_list = ["ทั้งหมด"] + sorted(list(df['region'].dropna().astype(str).unique())) if 'region' in df.columns else ["ทั้งหมด"]
-            selected_region = st.sidebar.selectbox("Region:", region_list)
+            selected_region = st.sidebar.selectbox("🌐 Region:", region_list)
 
             # Filter Logic
             filtered_df = df.copy()
@@ -222,9 +579,9 @@ if menu == "🍹 Spirits _ สำรวจสื่อโฆษณา":
 
             # KPI Dashboard
             k1, k2, k3 = st.columns(3)
-            k1.metric("จำนวนรายการสำรวจ", f"{len(filtered_df):,} รายการ")
-            k2.metric("ร้านค้าที่สำรวจ", f"{filtered_df['shopCode'].nunique() if 'shopCode' in filtered_df.columns else 0:,} ร้าน")
-            k3.metric("พนักงานผู้สำรวจ", f"{filtered_df['พนักงาน'].nunique():,} คน")
+            k1.metric("📋 จำนวนรายการสำรวจ", f"{len(filtered_df):,} รายการ")
+            k2.metric("🏪 ร้านค้าที่สำรวจ", f"{filtered_df['shopCode'].nunique() if 'shopCode' in filtered_df.columns else 0:,} ร้าน")
+            k3.metric("👤 พนักงานผู้สำรวจ", f"{filtered_df['พนักงาน'].nunique():,} คน")
 
             st.markdown("---")
 
@@ -269,15 +626,19 @@ if menu == "🍹 Spirits _ สำรวจสื่อโฆษณา":
                 with st.expander("📊 ตารางข้อมูลดิบ (Raw Data)"):
                     st.dataframe(filtered_df, use_container_width=True)
     else:
-        st.info("👋 กรุณาอัปโหลดไฟล์ข้อมูลที่ Sidebar เพื่อเริ่มการทำงาน")
+        st.info("👋 กรุณาอัปโหลดไฟล์ข้อมูลที่ Sidebar ด้านซ้าย เพื่อเริ่มการทำงาน")
 
 
 # =========================================================
 # 5. เมนูที่ 2: CheckIn Audit Pro
 # =========================================================
 elif menu == "🔍 CheckIn Audit Pro":
-    st.markdown('<div class="main-title">🔍 CheckIn Audit Pro รายงานเยี่ยมร้านค้า</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-title">ระบบตรวจสอบพิกัด GPS, ระยะห่างการเข้าเยี่ยม และรูปถ่ายสถานะร้านค้า</div>', unsafe_allow_html=True)
+    st.markdown("""
+        <div class="header-banner">
+            <div class="main-title">🔍 CheckIn Audit Pro — รายงานการเยี่ยมร้านค้า</div>
+            <div class="sub-title">ระบบตรวจสอบพิกัด GPS, ระยะห่างการเข้าเยี่ยม และรูปถ่ายสถานะร้านค้าอย่างแม่นยำ</div>
+        </div>
+    """, unsafe_allow_html=True)
 
     uploaded_file = st.sidebar.file_uploader("📂 อัปโหลดไฟล์รายงาน (.xlsx)", type=["xlsx"], key="checkin_upload")
 
@@ -299,11 +660,11 @@ elif menu == "🔍 CheckIn Audit Pro":
             dist_threshold = st.sidebar.number_input("ระยะทางเกินกำหนด (เมตร)", value=100, step=50) if filter_distance else 0
             
             status_options = ["ทั้งหมด"] + list(df['สถานะร้านปิด/เลิกกิจการ'].dropna().unique()) if 'สถานะร้านปิด/เลิกกิจการ' in df.columns else ["ทั้งหมด"]
-            selected_status = st.sidebar.selectbox("สถานะร้านค้า", status_options)
-            audit_filter = st.sidebar.selectbox("สถานะการตรวจ", ["ทั้งหมด", "ยังไม่ได้ตรวจ", "ผ่าน", "ไม่ผ่าน", "รอตรวจสอบเพิ่ม"])
+            selected_status = st.sidebar.selectbox("🏪 สถานะร้านค้า", status_options)
+            audit_filter = st.sidebar.selectbox("📋 สถานะการตรวจ", ["ทั้งหมด", "ยังไม่ได้ตรวจ", "ผ่าน", "ไม่ผ่าน", "รอตรวจสอบเพิ่ม"])
             
             st.sidebar.markdown("---")
-            items_per_page = st.sidebar.selectbox("แสดงรายการต่อหน้า", [12, 24, 48, 96], index=0)
+            items_per_page = st.sidebar.selectbox("📄 แสดงรายการต่อหน้า", [12, 24, 48, 96], index=0)
 
             # Filtering Data
             filtered_df = df.copy()
@@ -327,11 +688,11 @@ elif menu == "🔍 CheckIn Audit Pro":
 
             # Summary Metrics
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("รายการทั้งหมด", f"{len(df):,} รายการ")
-            c2.metric("ตรงตามตัวกรอง", f"{len(filtered_df):,} รายการ")
+            c1.metric("📦 รายการทั้งหมด", f"{len(df):,} รายการ")
+            c2.metric("🎯 ตรงตามตัวกรอง", f"{len(filtered_df):,} รายการ")
             audited_count = len([v for v in st.session_state['audit_results'].values() if v.get('status') != 'ยังไม่ได้ตรวจ'])
-            c3.metric("ตรวจแล้ว", f"{audited_count:,} รายการ")
-            c4.metric("คงเหลือ", f"{max(0, len(df) - audited_count):,} รายการ")
+            c3.metric("✅ ตรวจแล้ว", f"{audited_count:,} รายการ")
+            c4.metric("⏳ คงเหลือ", f"{max(0, len(df) - audited_count):,} รายการ")
 
             st.markdown("---")
 
@@ -341,7 +702,7 @@ elif menu == "🔍 CheckIn Audit Pro":
             
             col_p1, _ = st.columns([2, 3])
             with col_p1:
-                current_page = st.number_input(f"เลือกหน้า (จากทั้งหมด {total_pages} หน้า)", min_value=1, max_value=total_pages, value=1)
+                current_page = st.number_input(f"📖 เลือกหน้า (จากทั้งหมด {total_pages} หน้า)", min_value=1, max_value=total_pages, value=1)
             
             start_idx = (current_page - 1) * items_per_page
             end_idx = start_idx + items_per_page
@@ -353,7 +714,6 @@ elif menu == "🔍 CheckIn Audit Pro":
 
             for i, (orig_idx, row) in enumerate(page_data.iterrows()):
                 with grid_cols[i % cols_per_row]:
-                    # ใช้ st.container เพื่อสร้างการ์ดที่ขอบมน สะอาด
                     with st.container():
                         shop_name = row.get('ชื่อร้านค้า', 'ไม่ระบุชื่อร้าน')
                         shop_code = row.get('รหัสร้านค้า', '-')
@@ -425,7 +785,7 @@ elif menu == "🔍 CheckIn Audit Pro":
             st.markdown("---")
             st.subheader("📥 ส่งออกผลการตรวจสอบ")
             
-            if st.button("🔄 ประมวลผลไฟล์สำหรับดาวน์โหลด"):
+            if st.button("🔄 ประมวลผลไฟล์สำหรับดาวน์โหลด", use_container_width=True):
                 export_df = df.copy()
                 export_df['ผลการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('status', 'ยังไม่ได้ตรวจ'))
                 export_df['หมายเหตุการตรวจ'] = export_df.index.map(lambda x: st.session_state['audit_results'].get(x, {}).get('note', ''))
@@ -438,7 +798,8 @@ elif menu == "🔍 CheckIn Audit Pro":
                     label="⬇️ ดาวน์โหลดรายงาน (.xlsx)",
                     data=output.getvalue(),
                     file_name="รายงานการตรวจรูปถ่าย_CheckIn.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    use_container_width=True
                 )
 
         except Exception as e:
