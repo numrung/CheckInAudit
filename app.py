@@ -593,10 +593,13 @@ elif menu == "📍 CheckIn Audit Pro":
                         )
                         st.write(f"📅 {visit_date}  ⏰ {visit_time}")
 
-                        # Distance Alert Badge
+                        # Distance Alert Badge (ปรับเทียบกับ dist_threshold หากมีการกรอง หรือใช้ค่ากำหนด 200 เป็นมาตรฐาน)
                         try:
                             dist_val = float(distance)
-                            if dist_val > 100:
+                            check_limit = (
+                                dist_threshold if filter_distance else 200
+                            )
+                            if dist_val > check_limit:
                                 st.markdown(
                                     f"<div class='badge-alert'>📍 ระยะห่าง"
                                     f" {dist_val:.1f} ม. (นอกพิกัด)</div>",
